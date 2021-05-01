@@ -1,13 +1,7 @@
-import java.lang.Exception
 import kotlin.math.max
 import kotlin.random.Random
 
 class GameGenerator(private val boxCount: Int, private val rubyCount: Int) {
-    private val rubyPermutation: MutableSet<Set<Int>>
-
-    init {
-        rubyPermutation = getRubyPermutation()
-    }
 
     fun generateGame(): Game {
         while (true) {
@@ -40,22 +34,6 @@ class GameGenerator(private val boxCount: Int, private val rubyCount: Int) {
                 )
 
         }
-    }
-
-    private fun getRubyPermutation(): MutableSet<Set<Int>> {
-        val list = mutableSetOf<Set<Int>>()
-        getRubyPermutation(list, mutableSetOf(), 0)
-        return list
-    }
-
-    private fun getRubyPermutation(existing: MutableSet<Set<Int>>, pre: Set<Int>, i: Int) {
-        if (pre.size == rubyCount) {
-            existing.add(pre)
-            return
-        }
-        if (i == boxCount) return
-        getRubyPermutation(existing, pre, i + 1)
-        getRubyPermutation(existing, pre.toMutableSet().apply { this.add(i) }, i + 1)
     }
 
     private fun genStatements(): MutableList<Statement> {
