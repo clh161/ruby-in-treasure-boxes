@@ -37,3 +37,7 @@ class Statement(val statementType: StatementType, val targets: Set<Int>) {
         return result
     }
 }
+
+enum class StatementType {
+    HAS, HAS_NOT
+}

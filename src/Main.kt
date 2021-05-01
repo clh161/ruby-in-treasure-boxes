@@ -5,7 +5,3 @@ fun main() {
     val generateStatements = generator.generateStatements()
     generateStatements.print()
 }
-
-enum class StatementType {
-    HAS, HAS_NOT
-}
