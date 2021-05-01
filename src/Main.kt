@@ -1,8 +1,9 @@
 import java.util.*
+import kotlin.math.max
 import kotlin.random.Random
 
-val BOX_COUNT = 30
-val RUBY_COUNT = 3
+const val BOX_COUNT = 5
+const val RUBY_COUNT = 3
 
 fun main() {
     val rubies = getRubyPermutation().toList()
@@ -36,7 +37,7 @@ private fun printQuestion(
             println("答案:${validRubies.first().map { it + 1 }}號箱有寶石，提示${validStatementIndex + 1}正確")
         }
         else -> {
-            println("Pirates found $BOX_COUNT treasure boxes. $RUBY_COUNT of them has a ruby.")
+            println("Pirates found $BOX_COUNT treasure boxes. $RUBY_COUNT of them ${if (BOX_COUNT > 1) "have" else "has"} a ruby.")
             println("There is a hint on each treasure box.")
             println("Only one of $BOX_COUNT hints is a correct statement.")
             println("Which $RUBY_COUNT treasure boxes have a ruby")
@@ -91,7 +92,8 @@ fun genStatements(): MutableList<Statement> {
 fun genStatement(): Statement {
     val statementType = if (Random.nextBoolean()) StatementType.IS else StatementType.IS_NOT
     val targetCountMax = if (StatementType.IS === statementType) RUBY_COUNT else BOX_COUNT - RUBY_COUNT
-    val targetCount = Random.nextInt(1, targetCountMax + 1)
+    val targetCountMin = max(1, targetCountMax - 1)
+    val targetCount = Random.nextInt(targetCountMin, targetCountMax + 1)
     val targets = mutableSetOf<Int>()
     while (targets.size < targetCount) {
         val target = getRandom()
@@ -119,10 +121,10 @@ class Statement(val statementType: StatementType, val targets: Set<Int>) {
                 "" + targetsString + "號寶箱" + (if (targets.size > 1) "均" else "") + typeString + "寶石"
             }
             else -> {
-                val typeString = if (statementType == StatementType.IS) " has" else " has no"
+                val typeString = if (statementType == StatementType.IS) "" else " no"
                 val targetsString =
                     targets.toList().sorted().map { it + 1 }
-                "Box No. " + targetsString + (if (targets.size > 1) " all" else "") + typeString + " a ruby."
+                "Box No. " + targetsString + (if (targets.size > 1) " all have" else " has") + typeString + " a ruby."
 
             }
         }
