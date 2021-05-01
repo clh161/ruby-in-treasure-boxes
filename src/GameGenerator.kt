@@ -1,7 +1,7 @@
 import kotlin.math.max
 import kotlin.random.Random
 
-class GameGenerator(val boxCount: Int, val rubyCount: Int) {
+class GameGenerator(private val boxCount: Int, private val rubyCount: Int) {
     private val rubyPermutation: MutableSet<Set<Int>>
 
     init {
