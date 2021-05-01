@@ -1,11 +1,11 @@
 import java.util.*
 
 class Game(
-    val boxCount: Int,
-    val rubyCount: Int,
-    val statements: MutableList<Statement>,
-    val validRubies: List<Set<Int>>,
-    val validStatementIndex: Int
+    private val boxCount: Int,
+    private val rubyCount: Int,
+    private val statements: MutableList<Statement>,
+    private val validRubies: List<Set<Int>>,
+    private val validStatementIndex: Int
 ) {
 
 

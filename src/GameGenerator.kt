@@ -39,7 +39,7 @@ class GameGenerator(private val boxCount: Int, private val rubyCount: Int) {
         getRubyPermutation(existing, pre.toMutableSet().apply { this.add(i) }, i + 1)
     }
 
-    fun genStatements(): MutableList<Statement> {
+    private fun genStatements(): MutableList<Statement> {
         val statements = mutableListOf<Statement>()
         while (statements.size < boxCount) {
             val statement = genStatement()
@@ -50,7 +50,7 @@ class GameGenerator(private val boxCount: Int, private val rubyCount: Int) {
     }
 
 
-    fun genStatement(): Statement {
+    private fun genStatement(): Statement {
         val statementType = if (Random.nextBoolean()) StatementType.HAS else StatementType.HAS_NOT
         val targetCountMax = if (StatementType.HAS === statementType) rubyCount else boxCount - rubyCount
         val targetCountMin = max(1, targetCountMax - 1)
