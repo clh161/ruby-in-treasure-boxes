@@ -49,7 +49,7 @@ class GameGenerator(private val boxCount: Int, private val rubyCount: Int) {
 
     private fun genStatement(): Statement {
         val statementType = if (Random.nextBoolean()) StatementType.HAS else StatementType.HAS_NOT
-        val targetCountMax = if (StatementType.HAS === statementType) rubyCount else boxCount - rubyCount
+        val targetCountMax = if (StatementType.HAS === statementType) rubyCount else (boxCount - rubyCount) / 2
         val targetCountMin = max(1, targetCountMax - 1)
         val targetCount = Random.nextInt(targetCountMin, targetCountMax + 1)
         val targets = mutableSetOf<Int>()
