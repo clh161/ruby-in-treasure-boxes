@@ -2,8 +2,8 @@ import java.util.*
 import kotlin.math.max
 import kotlin.random.Random
 
-const val BOX_COUNT = 5
-const val RUBY_COUNT = 3
+const val BOX_COUNT = 3
+const val RUBY_COUNT = 1
 
 fun main() {
     val rubies = getRubyPermutation().toList()
@@ -31,19 +31,19 @@ private fun printQuestion(
             println("每個寶箱都有一句提示寶石的位置。")
             println("${BOX_COUNT}個提示中只有一個是正確。")
             println("寶石究竟在哪${RUBY_COUNT}個寶箱？")
-            println("--------------------------------")
+            println("-------------提示-------------")
             statements.forEachIndexed { i, statement -> println("""提示 ${i + 1}: $statement""") }
-            println("--------------------------------")
+            println("-----------------------------")
             println("答案:${validRubies.first().map { it + 1 }}號箱有寶石，提示${validStatementIndex + 1}正確")
         }
         else -> {
             println("Pirates found $BOX_COUNT treasure boxes. $RUBY_COUNT of them ${if (BOX_COUNT > 1) "have" else "has"} a ruby.")
             println("There is a hint on each treasure box.")
             println("Only one of $BOX_COUNT hints is a correct statement.")
-            println("Which $RUBY_COUNT treasure boxes have a ruby")
-            println("--------------------------------")
+            println("Which $RUBY_COUNT treasure boxes have a ruby?")
+            println("-----------Hints-----------")
             statements.forEachIndexed { i, statement -> println("Hint ${i + 1}: ${statement.toString(locale)}") }
-            println("--------------------------------")
+            println("---------------------------")
             println(
                 "Answer: Box No. ${
                     validRubies.first().map { it + 1 }
