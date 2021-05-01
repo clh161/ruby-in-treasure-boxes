@@ -9,24 +9,44 @@ class GameGenerator(private val boxCount: Int, private val rubyCount: Int) {
     }
 
     fun generateGame(): Game {
-        println("Start generating a game.")
-        var n = 0
-        val start1 = System.currentTimeMillis()
         while (true) {
-            val start2 = System.currentTimeMillis()
-            n++
             val statements = genStatements()
             val validRubies = rubyPermutation.filter { rubies ->
                 statements.map { statement -> statement.validate(rubies) }.filter { it }.size == 1
             }
-            println("Trail $n, Total time: " + (System.currentTimeMillis() - start2))
             if (validRubies.size != 1) continue
-            println("Total time: " + (System.currentTimeMillis() - start1))
             val validStatementIndex =
                 statements.map { statement -> statement.validate(validRubies.first()) }
                     .mapIndexed { i, isTrue -> if (isTrue) i else null }
                     .filterNotNull().first()
             return Game(boxCount, rubyCount, statements, validRubies, validStatementIndex)
+        }
+    }
+
+    fun debug(printingInterval: Int = 100) {
+        println("Start generating a game.")
+        var totalGameCount = 0
+        var validGameCount = 0
+        val startTime = System.currentTimeMillis()
+        while (true) {
+            val statements = genStatements()
+            val validRubies = rubyPermutation.filter { rubies ->
+                statements.map { statement -> statement.validate(rubies) }.filter { it }.size == 1
+            }
+            totalGameCount++
+            if (validRubies.size == 1)
+                validGameCount++
+            val duration = System.currentTimeMillis() - startTime
+            if (totalGameCount % printingInterval == 0)
+                println(
+                    listOf(
+                        "Total games: $totalGameCount",
+                        "Games/sec: ${(totalGameCount.toDouble() / duration) * 1000 * 60}",
+                        "Valid Games/sec: ${(validGameCount.toDouble() / duration) * 1000 * 60}",
+                        "Valid Games/Total Games: ${(validGameCount.toDouble() / totalGameCount)}",
+                    )
+                )
+
         }
     }
 
