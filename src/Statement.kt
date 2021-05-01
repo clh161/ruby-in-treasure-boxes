@@ -1,6 +1,13 @@
 import java.util.*
 
 class Statement(val statementType: StatementType, val targets: Set<Int>) {
+    fun validate(rubies: Set<Int>): Boolean {
+        return if (statementType == StatementType.HAS) rubies.containsAll(targets) else targets.intersect(
+            rubies
+        )
+            .isEmpty()
+    }
+
     fun toString(locale: Locale): String {
         return when (locale) {
             Locale.CHINESE, Locale.TRADITIONAL_CHINESE -> {

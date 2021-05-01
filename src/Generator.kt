@@ -11,21 +11,15 @@ class Generator(val boxCount: Int, val rubyCount: Int) {
     fun generateStatements(): Game {
         while (true) {
             val statements = genStatements()
-            val validRubies = rubyPermutation.filter { validateStatements(it, statements).filter { it }.size == 1 }
+            val validRubies = rubyPermutation.filter { rubies ->
+                statements.map { statement -> statement.validate(rubies) }.filter { it }.size == 1
+            }
             if (validRubies.size != 1) continue
             val validStatementIndex =
-                validateStatements(validRubies.first(), statements).mapIndexed { i, isTrue -> if (isTrue) i else null }
+                statements.map { statement -> statement.validate(validRubies.first()) }
+                    .mapIndexed { i, isTrue -> if (isTrue) i else null }
                     .filterNotNull().first()
             return Game(boxCount, rubyCount, statements, validRubies, validStatementIndex)
-        }
-    }
-
-    fun validateStatements(rubies: Set<Int>, statements: MutableList<Statement>): List<Boolean> {
-        return statements.map {
-            if (it.statementType == StatementType.HAS) rubies.containsAll(it.targets) else it.targets.intersect(
-                rubies
-            )
-                .isEmpty()
         }
     }
 
