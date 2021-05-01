@@ -2,8 +2,8 @@ import java.util.*
 import kotlin.math.max
 import kotlin.random.Random
 
-const val BOX_COUNT = 3
-const val RUBY_COUNT = 1
+const val BOX_COUNT = 10
+const val RUBY_COUNT = 3
 
 fun main() {
     val rubies = getRubyPermutation().toList()
@@ -96,15 +96,11 @@ fun genStatement(): Statement {
     val targetCount = Random.nextInt(targetCountMin, targetCountMax + 1)
     val targets = mutableSetOf<Int>()
     while (targets.size < targetCount) {
-        val target = getRandom()
+        val target = Random.nextInt(0, BOX_COUNT)
         if (!targets.contains(target))
             targets.add(target)
     }
     return Statement(statementType, targets)
-}
-
-fun getRandom(): Int {
-    return Random.nextInt(0, BOX_COUNT)
 }
 
 enum class StatementType {
