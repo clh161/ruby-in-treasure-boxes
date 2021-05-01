@@ -71,7 +71,7 @@ fun getRubyPermutation(existing: MutableSet<Set<Int>>, pre: Set<Int>, i: Int) {
 
 fun validateStatements(rubies: Set<Int>, statements: MutableList<Statement>): List<Boolean> {
     return statements.map {
-        if (it.statementType == StatementType.IS) rubies.containsAll(it.targets) else it.targets.intersect(
+        if (it.statementType == StatementType.HAS) rubies.containsAll(it.targets) else it.targets.intersect(
             rubies
         )
             .isEmpty()
@@ -90,8 +90,8 @@ fun genStatements(): MutableList<Statement> {
 
 
 fun genStatement(): Statement {
-    val statementType = if (Random.nextBoolean()) StatementType.IS else StatementType.IS_NOT
-    val targetCountMax = if (StatementType.IS === statementType) RUBY_COUNT else BOX_COUNT - RUBY_COUNT
+    val statementType = if (Random.nextBoolean()) StatementType.HAS else StatementType.HAS_NOT
+    val targetCountMax = if (StatementType.HAS === statementType) RUBY_COUNT else BOX_COUNT - RUBY_COUNT
     val targetCountMin = max(1, targetCountMax - 1)
     val targetCount = Random.nextInt(targetCountMin, targetCountMax + 1)
     val targets = mutableSetOf<Int>()
@@ -104,20 +104,20 @@ fun genStatement(): Statement {
 }
 
 enum class StatementType {
-    IS, IS_NOT
+    HAS, HAS_NOT
 }
 
 class Statement(val statementType: StatementType, val targets: Set<Int>) {
     fun toString(locale: Locale): String {
         return when (locale) {
             Locale.CHINESE, Locale.TRADITIONAL_CHINESE -> {
-                val typeString = if (statementType == StatementType.IS) "有" else "沒有"
+                val typeString = if (statementType == StatementType.HAS) "有" else "沒有"
                 val targetsString =
                     targets.toList().sorted().map { it + 1 }
                 "" + targetsString + "號寶箱" + (if (targets.size > 1) "均" else "") + typeString + "寶石"
             }
             else -> {
-                val typeString = if (statementType == StatementType.IS) "" else " no"
+                val typeString = if (statementType == StatementType.HAS) "" else " no"
                 val targetsString =
                     targets.toList().sorted().map { it + 1 }
                 "Box No. " + targetsString + (if (targets.size > 1) " all have" else " has") + typeString + " a ruby."
