@@ -1,6 +1,7 @@
+import java.util.*
 import kotlin.random.Random
 
-val BOX_COUNT = 5
+val BOX_COUNT = 30
 val RUBY_COUNT = 3
 
 fun main() {
@@ -20,16 +21,35 @@ fun main() {
 private fun printQuestion(
     statements: MutableList<Statement>,
     validRubies: List<Set<Int>>,
-    validStatementIndex: Int
+    validStatementIndex: Int,
+    locale: Locale = Locale.ENGLISH
 ) {
-    println("海盜發現了" + BOX_COUNT + "個寶箱，其中只有" + RUBY_COUNT + "個寶箱有寶石。")
-    println("每個寶箱都有一句提示寶石的位置。")
-    println("${BOX_COUNT}個提示中只有一個是正確。")
-    println("寶石究竟在哪" + RUBY_COUNT + "個寶箱？")
-    println("--------------------------------")
-    statements.forEachIndexed { i, statement -> println("""提示 ${i + 1}: $statement""") }
-    println("--------------------------------")
-    println("答案:" + validRubies.first().map { it + 1 } + "號箱有寶石，提示" + (validStatementIndex + 1) + "正確")
+    when (locale) {
+        Locale.CHINESE, Locale.TRADITIONAL_CHINESE -> {
+            println("海盜發現了${BOX_COUNT}個寶箱，其中只有${RUBY_COUNT}個寶箱有寶石。")
+            println("每個寶箱都有一句提示寶石的位置。")
+            println("${BOX_COUNT}個提示中只有一個是正確。")
+            println("寶石究竟在哪${RUBY_COUNT}個寶箱？")
+            println("--------------------------------")
+            statements.forEachIndexed { i, statement -> println("""提示 ${i + 1}: $statement""") }
+            println("--------------------------------")
+            println("答案:${validRubies.first().map { it + 1 }}號箱有寶石，提示${validStatementIndex + 1}正確")
+        }
+        else -> {
+            println("Pirates found $BOX_COUNT treasure boxes. $RUBY_COUNT of them has a ruby.")
+            println("There is a hint on each treasure box.")
+            println("Only one of $BOX_COUNT hints is a correct statement.")
+            println("Which $RUBY_COUNT treasure boxes have a ruby")
+            println("--------------------------------")
+            statements.forEachIndexed { i, statement -> println("Hint ${i + 1}: ${statement.toString(locale)}") }
+            println("--------------------------------")
+            println(
+                "Answer: Box No. ${
+                    validRubies.first().map { it + 1 }
+                } has a ruby. Hint ${validStatementIndex + 1} is correct."
+            )
+        }
+    }
 }
 
 fun getRubyPermutation(): MutableSet<Set<Int>> {
@@ -61,7 +81,7 @@ fun genStatements(): MutableList<Statement> {
     val statements = mutableListOf<Statement>()
     while (statements.size < BOX_COUNT) {
         val statement = genStatement()
-        if (statements.contains(statement)) continue
+        if (statements.map { it.targets }.contains(statement.targets)) continue
         statements.add(statement)
     }
     return statements
@@ -90,11 +110,22 @@ enum class StatementType {
 }
 
 class Statement(val statementType: StatementType, val targets: Set<Int>) {
-    override fun toString(): String {
-        val typeString = if (statementType == StatementType.IS) "有" else "沒有"
-        val targetsString =
-            targets.toList().sorted().map { it + 1 }.joinToString(prefix = "", postfix = "")
-        return "" + targetsString + "號寶箱" + (if (targets.size > 1) "均" else "") + typeString + "寶石"
+    fun toString(locale: Locale): String {
+        return when (locale) {
+            Locale.CHINESE, Locale.TRADITIONAL_CHINESE -> {
+                val typeString = if (statementType == StatementType.IS) "有" else "沒有"
+                val targetsString =
+                    targets.toList().sorted().map { it + 1 }
+                "" + targetsString + "號寶箱" + (if (targets.size > 1) "均" else "") + typeString + "寶石"
+            }
+            else -> {
+                val typeString = if (statementType == StatementType.IS) " has" else " has no"
+                val targetsString =
+                    targets.toList().sorted().map { it + 1 }
+                "Box No. " + targetsString + (if (targets.size > 1) " all" else "") + typeString + " a ruby."
+
+            }
+        }
     }
 
     override fun equals(other: Any?): Boolean {
