@@ -9,12 +9,19 @@ class GameGenerator(private val boxCount: Int, private val rubyCount: Int) {
     }
 
     fun generateGame(): Game {
+        println("Start generating a game.")
+        var n = 0
+        val start1 = System.currentTimeMillis()
         while (true) {
+            val start2 = System.currentTimeMillis()
+            n++
             val statements = genStatements()
             val validRubies = rubyPermutation.filter { rubies ->
                 statements.map { statement -> statement.validate(rubies) }.filter { it }.size == 1
             }
+            println("Trail $n, Total time: " + (System.currentTimeMillis() - start2))
             if (validRubies.size != 1) continue
+            println("Total time: " + (System.currentTimeMillis() - start1))
             val validStatementIndex =
                 statements.map { statement -> statement.validate(validRubies.first()) }
                     .mapIndexed { i, isTrue -> if (isTrue) i else null }
