@@ -1,7 +1,5 @@
-import java.util.*
-
 fun main() {
-    val generator = Generator(5, 3)
-    val generateStatements = generator.generateStatements()
-    generateStatements.print()
+    val generator = GameGenerator(5, 3)
+    val game = generator.generateGame()
+    game.print()
 }

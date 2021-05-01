@@ -1,14 +1,14 @@
 import kotlin.math.max
 import kotlin.random.Random
 
-class Generator(val boxCount: Int, val rubyCount: Int) {
+class GameGenerator(val boxCount: Int, val rubyCount: Int) {
     private val rubyPermutation: MutableSet<Set<Int>>
 
     init {
         rubyPermutation = getRubyPermutation()
     }
 
-    fun generateStatements(): Game {
+    fun generateGame(): Game {
         while (true) {
             val statements = genStatements()
             val validRubies = rubyPermutation.filter { rubies ->
