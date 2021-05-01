@@ -1,5 +1,4 @@
 import java.util.*
-import kotlin.math.max
 
 class Game(
     private val boxCount: Int,
@@ -8,8 +7,8 @@ class Game(
 ) {
 
     val isValid: Boolean
-    val validRuby: Set<Int>?
-    val validStatementIndex: Int?
+    private val validRuby: Set<Int>?
+    private val validStatementIndex: Int?
 
     init {
         val answers = getAnswers()
@@ -46,16 +45,6 @@ class Game(
             newRubyPositions.add(i)
             getAnswers(answers, newRubyPositions, maxCount)
         }
-    }
-
-    private fun getRubyPermutation(existing: MutableSet<Set<Int>>, pre: Set<Int>, i: Int) {
-        if (pre.size == rubyCount) {
-            existing.add(pre)
-            return
-        }
-        if (i == boxCount) return
-        getRubyPermutation(existing, pre, i + 1)
-        getRubyPermutation(existing, pre.toMutableSet().apply { this.add(i) }, i + 1)
     }
 
 
