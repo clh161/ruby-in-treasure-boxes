@@ -1,3 +1,4 @@
+import java.lang.Exception
 import kotlin.math.max
 import kotlin.random.Random
 
@@ -11,15 +12,8 @@ class GameGenerator(private val boxCount: Int, private val rubyCount: Int) {
     fun generateGame(): Game {
         while (true) {
             val statements = genStatements()
-            val validRubies = rubyPermutation.filter { rubies ->
-                statements.map { statement -> statement.validate(rubies) }.filter { it }.size == 1
-            }
-            if (validRubies.size != 1) continue
-            val validStatementIndex =
-                statements.map { statement -> statement.validate(validRubies.first()) }
-                    .mapIndexed { i, isTrue -> if (isTrue) i else null }
-                    .filterNotNull().first()
-            return Game(boxCount, rubyCount, statements, validRubies, validStatementIndex)
+            val game = Game(boxCount, rubyCount, statements)
+            if (game.isValid) return game
         }
     }
 
@@ -30,11 +24,9 @@ class GameGenerator(private val boxCount: Int, private val rubyCount: Int) {
         val startTime = System.currentTimeMillis()
         while (true) {
             val statements = genStatements()
-            val validRubies = rubyPermutation.filter { rubies ->
-                statements.map { statement -> statement.validate(rubies) }.filter { it }.size == 1
-            }
+            val game = Game(boxCount, rubyCount, statements)
             totalGameCount++
-            if (validRubies.size == 1)
+            if (game.isValid)
                 validGameCount++
             val duration = System.currentTimeMillis() - startTime
             if (totalGameCount % printingInterval == 0)
