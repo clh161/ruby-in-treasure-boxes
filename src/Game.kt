@@ -26,12 +26,13 @@ class Game(
 
     private fun getAnswers(maxCount: Int = 2): MutableSet<Set<Int>> {
         val list = mutableSetOf<Set<Int>>()
-        getAnswers(list, mutableSetOf(), maxCount)
+        getAnswers(list, mutableSetOf(), 0, maxCount)
         return list
     }
 
-    private fun getAnswers(answers: MutableSet<Set<Int>>, rubyPositions: Set<Int>, maxCount: Int) {
+    private fun getAnswers(answers: MutableSet<Set<Int>>, rubyPositions: Set<Int>, n: Int, maxCount: Int) {
         if (answers.size == maxCount) return
+        if (n == boxCount) return
         if (rubyPositions.size == rubyCount) {
             val isValid = statements.map { statement -> statement.validate(rubyPositions) }.filter { it }.size == 1
             if (isValid) {
@@ -39,12 +40,10 @@ class Game(
             }
             return
         }
-        for (i in 0 until boxCount) {
-            if (rubyPositions.contains(i)) continue
-            val newRubyPositions = rubyPositions.toMutableSet()
-            newRubyPositions.add(i)
-            getAnswers(answers, newRubyPositions, maxCount)
-        }
+        getAnswers(answers, rubyPositions, n + 1, maxCount)
+        val newRubyPositions = rubyPositions.toMutableSet()
+        newRubyPositions.add(n)
+        getAnswers(answers, newRubyPositions, n + 1, maxCount)
     }
 
 
